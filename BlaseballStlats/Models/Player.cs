@@ -162,12 +162,24 @@ namespace BlaseballStlats.Models
         public double EDensity { get; set; }
 
         [JsonProperty("state")]
-        public State State { get; set; }
+        public PlayerState State { get; set; }
 
         [JsonProperty("evolution")]
         public int Evolution { get; set; }
 
         [JsonProperty("items")]
         public List<object> Items { get; set; }
+    }
+
+    public class PlayerState
+    {
+        [JsonProperty("gameModSources")]
+        public Dictionary<string, List<string>> GameModSources { get; set; }
+
+        [JsonProperty("permModSources")]
+        public Dictionary<string, List<string>> PermModSources { get; set; }
+
+        [JsonProperty("unscatteredName")]
+        public string UnscatteredName { get; set; }
     }
 }

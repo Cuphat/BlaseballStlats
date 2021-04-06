@@ -108,7 +108,7 @@ namespace BlaseballStlats.Models
         public double EDensity { get; set; }
 
         [JsonProperty("state")]
-        public State State { get; set; }
+        public TeamState State { get; set; }
 
         [JsonProperty("evolution")]
         public int Evolution { get; set; }
@@ -120,5 +120,14 @@ namespace BlaseballStlats.Models
         public int? Level { get; set; }
 
         public IEnumerable<Player> Players => Lineup.Concat(Rotation).Concat(Bench).Concat(Bullpen);
+    }
+
+    public class TeamState
+    {
+        [JsonProperty("gameModSources")]
+        public Dictionary<string, List<string>> GameModSources { get; set; }
+
+        [JsonProperty("permModSources")]
+        public Dictionary<string, List<string>> PermModSources { get; set; }
     }
 }
