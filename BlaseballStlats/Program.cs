@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BlaseballStlats.DataControllers;
 
 namespace BlaseballStlats
 {
@@ -14,10 +15,8 @@ namespace BlaseballStlats
         public static void Main(string[] args)
         {
             /*/
-            var controller = new BlaseballStlats.Controllers.ApiControllerBlaseball();
+            var controller = new BlaseballDataController();
             var teams = controller.GetAllTeams().GetAwaiter().GetResult();
-            var garages = controller.GetTeam(Guid.Parse("105bc3ff-1320-4e37-8ef0-8d595cb95dd0")).GetAwaiter().GetResult();
-            var garagesRotation = controller.GetPlayers(garages.Rotation).GetAwaiter().GetResult();
             return;
             /*/
 

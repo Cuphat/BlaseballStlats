@@ -1,167 +1,173 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace BlaseballStlats.Models
 {
     public class Player
     {
-        [JsonPropertyName("id")]
-        public string Id { get; set; }
+        [JsonProperty("id")]
+        public Guid Id { get; set; }
 
-        [JsonPropertyName("anticapitalism")]
+        [JsonProperty("anticapitalism")]
         public double Anticapitalism { get; set; }
 
-        [JsonPropertyName("baseThirst")]
+        [JsonProperty("baseThirst")]
         public double BaseThirst { get; set; }
 
-        [JsonPropertyName("buoyancy")]
+        [JsonProperty("buoyancy")]
         public double Buoyancy { get; set; }
 
-        [JsonPropertyName("chasiness")]
+        [JsonProperty("chasiness")]
         public double Chasiness { get; set; }
 
-        [JsonPropertyName("coldness")]
+        [JsonProperty("coldness")]
         public double Coldness { get; set; }
 
-        [JsonPropertyName("continuation")]
+        [JsonProperty("continuation")]
         public double Continuation { get; set; }
 
-        [JsonPropertyName("divinity")]
+        [JsonProperty("divinity")]
         public double Divinity { get; set; }
 
-        [JsonPropertyName("groundFriction")]
+        [JsonProperty("groundFriction")]
         public double GroundFriction { get; set; }
 
-        [JsonPropertyName("indulgence")]
+        [JsonProperty("indulgence")]
         public double Indulgence { get; set; }
 
-        [JsonPropertyName("laserlikeness")]
+        [JsonProperty("laserlikeness")]
         public double Laserlikeness { get; set; }
 
-        [JsonPropertyName("martyrdom")]
+        [JsonProperty("martyrdom")]
         public double Martyrdom { get; set; }
 
-        [JsonPropertyName("moxie")]
+        [JsonProperty("moxie")]
         public double Moxie { get; set; }
 
-        [JsonPropertyName("musclitude")]
+        [JsonProperty("musclitude")]
         public double Musclitude { get; set; }
 
-        [JsonPropertyName("name")]
+        [JsonProperty("name")]
         public string Name { get; set; }
 
-        [JsonPropertyName("omniscience")]
+        [JsonProperty("omniscience")]
         public double Omniscience { get; set; }
 
-        [JsonPropertyName("overpowerment")]
+        [JsonProperty("overpowerment")]
         public double Overpowerment { get; set; }
 
-        [JsonPropertyName("patheticism")]
+        [JsonProperty("patheticism")]
         public double Patheticism { get; set; }
 
-        [JsonPropertyName("ruthlessness")]
+        [JsonProperty("ruthlessness")]
         public double Ruthlessness { get; set; }
 
-        [JsonPropertyName("shakespearianism")]
+        [JsonProperty("shakespearianism")]
         public double Shakespearianism { get; set; }
 
-        [JsonPropertyName("suppression")]
+        [JsonProperty("suppression")]
         public double Suppression { get; set; }
 
-        [JsonPropertyName("tenaciousness")]
+        [JsonProperty("tenaciousness")]
         public double Tenaciousness { get; set; }
 
-        [JsonPropertyName("thwackability")]
+        [JsonProperty("thwackability")]
         public double Thwackability { get; set; }
 
-        [JsonPropertyName("tragicness")]
+        [JsonProperty("tragicness")]
         public double Tragicness { get; set; }
 
-        [JsonPropertyName("unthwackability")]
+        [JsonProperty("unthwackability")]
         public double Unthwackability { get; set; }
 
-        [JsonPropertyName("watchfulness")]
+        [JsonProperty("watchfulness")]
         public double Watchfulness { get; set; }
 
-        [JsonPropertyName("pressurization")]
+        [JsonProperty("pressurization")]
         public double Pressurization { get; set; }
 
-        [JsonPropertyName("totalFingers")]
+        [JsonProperty("totalFingers")]
         public int TotalFingers { get; set; }
 
-        [JsonPropertyName("soul")]
+        [JsonProperty("soul")]
         public int Soul { get; set; }
 
-        [JsonPropertyName("deceased")]
+        [JsonProperty("deceased")]
         public bool Deceased { get; set; }
 
-        [JsonPropertyName("peanutAllergy")]
-        public bool PeanutAllergy { get; set; }
+        [JsonProperty("peanutAllergy")]
+        public bool? PeanutAllergy { get; set; }
 
-        [JsonPropertyName("cinnamon")]
+        [JsonProperty("cinnamon")]
         public double Cinnamon { get; set; }
 
-        [JsonPropertyName("fate")]
+        [JsonProperty("fate")]
         public int Fate { get; set; }
 
-        [JsonPropertyName("ritual")]
+        [JsonProperty("ritual")]
         public string Ritual { get; set; }
 
-        [JsonPropertyName("coffee")]
+        [JsonProperty("coffee")]
         public int? Coffee { get; set; }
 
-        [JsonPropertyName("blood")]
+        [JsonProperty("blood")]
         public int? Blood { get; set; }
 
-        [JsonPropertyName("permAttr")]
+        [JsonProperty("permAttr")]
         public List<string> PermAttr { get; set; }
 
-        [JsonPropertyName("seasAttr")]
+        [JsonProperty("seasAttr")]
         public List<string> SeasAttr { get; set; }
 
-        [JsonPropertyName("weekAttr")]
+        [JsonProperty("weekAttr")]
         public List<string> WeekAttr { get; set; }
 
-        [JsonPropertyName("gameAttr")]
+        [JsonProperty("gameAttr")]
         public List<string> GameAttr { get; set; }
 
-        [JsonPropertyName("hitStreak")]
+        [JsonProperty("hitStreak")]
         public int HitStreak { get; set; }
 
-        [JsonPropertyName("consecutiveHits")]
+        [JsonProperty("consecutiveHits")]
         public int ConsecutiveHits { get; set; }
 
-        [JsonPropertyName("baserunningRating")]
+        [JsonProperty("baserunningRating")]
         public double BaserunningRating { get; set; }
 
-        [JsonPropertyName("pitchingRating")]
+        [JsonProperty("pitchingRating")]
         public double PitchingRating { get; set; }
 
-        [JsonPropertyName("hittingRating")]
+        [JsonProperty("hittingRating")]
         public double HittingRating { get; set; }
 
-        [JsonPropertyName("defenseRating")]
+        [JsonProperty("defenseRating")]
         public double DefenseRating { get; set; }
 
-        [JsonPropertyName("leagueTeamId")]
-        public string LeagueTeamId { get; set; }
+        [JsonProperty("leagueTeamId")]
+        public Guid? LeagueTeamId { get; set; }
 
-        [JsonPropertyName("tournamentTeamId")]
-        public string TournamentTeamId { get; set; }
+        [JsonIgnore]
+        public Team LeagueTeam { get; set; }
 
-        [JsonPropertyName("eDensity")]
+        [JsonProperty("tournamentTeamId")]
+        public Guid? TournamentTeamId { get; set; }
+
+        [JsonIgnore]
+        public Team TournamentTeam { get; set; }
+
+        [JsonProperty("eDensity")]
         public double EDensity { get; set; }
 
-        [JsonPropertyName("state")]
+        [JsonProperty("state")]
         public State State { get; set; }
 
-        [JsonPropertyName("evolution")]
+        [JsonProperty("evolution")]
         public int Evolution { get; set; }
 
-        [JsonPropertyName("items")]
+        [JsonProperty("items")]
         public List<object> Items { get; set; }
     }
 }

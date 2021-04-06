@@ -1,110 +1,124 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace BlaseballStlats.Models
 {
     public class Team
     {
-        [JsonPropertyName("id")]
+        [JsonProperty("id")]
         public Guid Id { get; set; }
 
-        [JsonPropertyName("lineup")]
-        public List<Guid> Lineup { get; set; }
+        [JsonProperty("lineup")]
+        public List<Guid> LineupIds { get; set; }
 
-        [JsonPropertyName("rotation")]
-        public List<Guid> Rotation { get; set; }
+        [JsonIgnore]
+        public List<Player> Lineup { get; set; }
 
-        [JsonPropertyName("bullpen")]
-        public List<Guid> Bullpen { get; set; }
+        [JsonProperty("rotation")]
+        public List<Guid> RotationIds { get; set; }
 
-        [JsonPropertyName("bench")]
-        public List<Guid> Bench { get; set; }
+        [JsonIgnore]
+        public List<Player> Rotation { get; set; }
 
-        [JsonPropertyName("seasAttr")]
+        [JsonProperty("bullpen")]
+        public List<Guid> BullpenIds { get; set; }
+
+        [JsonIgnore]
+        public List<Player> Bullpen { get; set; }
+
+        [JsonProperty("bench")]
+        public List<Guid> BenchIds { get; set; }
+
+        [JsonIgnore]
+        public List<Player> Bench { get; set; }
+
+        [JsonProperty("seasAttr")]
         public List<string> SeasAttr { get; set; }
 
-        [JsonPropertyName("permAttr")]
+        [JsonProperty("permAttr")]
         public List<string> PermAttr { get; set; }
 
-        [JsonPropertyName("fullName")]
+        [JsonProperty("fullName")]
         public string FullName { get; set; }
 
-        [JsonPropertyName("location")]
+        [JsonProperty("location")]
         public string Location { get; set; }
 
-        [JsonPropertyName("mainColor")]
+        [JsonProperty("mainColor")]
         public string MainColor { get; set; }
 
-        [JsonPropertyName("nickname")]
+        [JsonProperty("nickname")]
         public string Nickname { get; set; }
 
-        [JsonPropertyName("secondaryColor")]
+        [JsonProperty("secondaryColor")]
         public string SecondaryColor { get; set; }
 
-        [JsonPropertyName("shorthand")]
+        [JsonProperty("shorthand")]
         public string Shorthand { get; set; }
 
-        [JsonPropertyName("emoji")]
+        [JsonProperty("emoji")]
         public string Emoji { get; set; }
 
-        [JsonPropertyName("slogan")]
+        [JsonProperty("slogan")]
         public string Slogan { get; set; }
 
-        [JsonPropertyName("shameRuns")]
+        [JsonProperty("shameRuns")]
         public decimal ShameRuns { get; set; }
 
-        [JsonPropertyName("totalShames")]
+        [JsonProperty("totalShames")]
         public int TotalShames { get; set; }
 
-        [JsonPropertyName("totalShamings")]
+        [JsonProperty("totalShamings")]
         public int TotalShamings { get; set; }
 
-        [JsonPropertyName("seasonShames")]
+        [JsonProperty("seasonShames")]
         public int SeasonShames { get; set; }
 
-        [JsonPropertyName("seasonShamings")]
+        [JsonProperty("seasonShamings")]
         public int SeasonShamings { get; set; }
 
-        [JsonPropertyName("championships")]
+        [JsonProperty("championships")]
         public int Championships { get; set; }
 
-        [JsonPropertyName("weekAttr")]
+        [JsonProperty("weekAttr")]
         public List<string> WeekAttr { get; set; }
 
-        [JsonPropertyName("gameAttr")]
+        [JsonProperty("gameAttr")]
         public List<string> GameAttr { get; set; }
 
-        [JsonPropertyName("rotationSlot")]
+        [JsonProperty("rotationSlot")]
         public int RotationSlot { get; set; }
 
-        [JsonPropertyName("teamSpirit")]
+        [JsonProperty("teamSpirit")]
         public int TeamSpirit { get; set; }
 
-        [JsonPropertyName("card")]
+        [JsonProperty("card")]
         public int Card { get; set; }
 
-        [JsonPropertyName("tournamentWins")]
+        [JsonProperty("tournamentWins")]
         public int TournamentWins { get; set; }
 
-        [JsonPropertyName("stadium")]
+        [JsonProperty("stadium")]
         public Guid? Stadium { get; set; }
 
-        [JsonPropertyName("eDensity")]
+        [JsonProperty("eDensity")]
         public double EDensity { get; set; }
 
-        [JsonPropertyName("state")]
+        [JsonProperty("state")]
         public State State { get; set; }
 
-        [JsonPropertyName("evolution")]
+        [JsonProperty("evolution")]
         public int Evolution { get; set; }
 
-        [JsonPropertyName("winStreak")]
+        [JsonProperty("winStreak")]
         public int WinStreak { get; set; }
 
-        [JsonPropertyName("level")]
+        [JsonProperty("level")]
         public int? Level { get; set; }
+
+        public IEnumerable<Player> Players => Lineup.Concat(Rotation).Concat(Bench).Concat(Bullpen);
     }
 }

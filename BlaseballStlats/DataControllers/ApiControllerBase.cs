@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 using BlaseballStlats.Util;
 using Newtonsoft.Json;
 
-namespace BlaseballStlats.Controllers
+namespace BlaseballStlats.DataControllers
 {
     public class ApiControllerBase
     {
-        protected readonly HttpClient Client = new HttpClient();
+        protected readonly HttpClient Client = new();
 
         protected Uri Endpoint { get; }
 
