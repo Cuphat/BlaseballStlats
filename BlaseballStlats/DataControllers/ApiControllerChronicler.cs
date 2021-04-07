@@ -16,15 +16,15 @@ namespace BlaseballStlats.DataControllers
 
         protected class ApiCache
         {
-            public KeyValuePair<DateTimeOffset, List<Stadium>> StadiumsCache { get; set; }
+            public KeyValuePair<DateTimeOffset, List<Stadium>> Stadiums { get; set; }
         }
         protected ApiCache Cache = new();
 
         public async Task<List<Stadium>> GetAllStadiums(string dumpFileName = null)
         {
             // Check cache.
-            if (Cache.StadiumsCache.Key > DateTimeOffset.Now.AddMinutes(-2))
-                return Cache.StadiumsCache.Value.ToList();
+            if (Cache.Stadiums.Key > DateTimeOffset.Now.AddMinutes(-2))
+                return Cache.Stadiums.Value.ToList();
 
             // Call the API.
             var endpoint = new Uri($"{Endpoint}/v1/stadiums");
@@ -32,7 +32,7 @@ namespace BlaseballStlats.DataControllers
             var stadiums = result.ExtractData();
 
             // Update the cache.
-            Cache.StadiumsCache = new KeyValuePair<DateTimeOffset, List<Stadium>>(DateTimeOffset.Now, stadiums);
+            Cache.Stadiums = new KeyValuePair<DateTimeOffset, List<Stadium>>(DateTimeOffset.Now, stadiums);
 
             return stadiums;
         }

@@ -16,17 +16,19 @@ namespace BlaseballStlats.DataControllers
 
         protected class ApiCache
         {
-            public DateTimeOffset AllTeamsCacheTime { get; set; }
-            public Dictionary<Guid, KeyValuePair<DateTimeOffset, Team>> TeamCache { get; set; } = new();
-            public Dictionary<Guid, KeyValuePair<DateTimeOffset, Player>> PlayerCache { get; set; } = new();
+            public DateTimeOffset AllTeamsTime { get; set; }
+            public Dictionary<Guid, KeyValuePair<DateTimeOffset, Team>> Teams { get; set; } = new();
+            public Dictionary<Guid, KeyValuePair<DateTimeOffset, Player>> Players { get; set; } = new();
+            public Dictionary<Guid, KeyValuePair<DateTimeOffset, TeamElectionStats>> TeamElectionStats { get; set; } = new();
+            public Dictionary<Guid, KeyValuePair<DateTimeOffset, RenovationProgress>> RenovationProgress { get; set; } = new();
         }
         protected ApiCache Cache = new();
 
         public async Task<List<Team>> GetAllTeams(string dumpFileName = null)
         {
             // Check cache.
-            if (Cache.AllTeamsCacheTime > DateTimeOffset.Now.AddMinutes(-2))
-                return Cache.TeamCache.Select(c => c.Value.Value).ToList();
+            if (Cache.AllTeamsTime > DateTimeOffset.Now.AddMinutes(-2))
+                return Cache.Teams.Select(c => c.Value.Value).ToList();
 
             // Call the API.
             var endpoint = new Uri($"{Endpoint}/allTeams");
@@ -37,9 +39,9 @@ namespace BlaseballStlats.DataControllers
                 team.LastUpdate = DateTimeOffset.Now;
 
             // Update the cache.
-            Cache.AllTeamsCacheTime = DateTimeOffset.Now;
+            Cache.AllTeamsTime = DateTimeOffset.Now;
             foreach (var team in teams)
-                Cache.TeamCache[team.Id] = new KeyValuePair<DateTimeOffset, Team>(DateTimeOffset.Now, team);
+                Cache.Teams[team.Id] = new KeyValuePair<DateTimeOffset, Team>(DateTimeOffset.Now, team);
 
             return teams;
         }
@@ -47,8 +49,8 @@ namespace BlaseballStlats.DataControllers
         public async Task<Team> GetTeam(Guid teamId, string dumpFileName = null)
         {
             // Check cache.
-            if (Cache.TeamCache.ContainsKey(teamId) && Cache.TeamCache[teamId].Key > DateTimeOffset.Now.AddMinutes(-2))
-                return Cache.TeamCache[teamId].Value;
+            if (Cache.Teams.ContainsKey(teamId) && Cache.Teams[teamId].Key > DateTimeOffset.Now.AddMinutes(-2))
+                return Cache.Teams[teamId].Value;
 
             // Call the API.
             var endpoint = new Uri($"{Endpoint}/team?id={teamId}");
@@ -58,7 +60,7 @@ namespace BlaseballStlats.DataControllers
             team.LastUpdate = DateTimeOffset.Now;
 
             // Update the cache.
-            Cache.TeamCache[teamId] = new KeyValuePair<DateTimeOffset, Team>(DateTimeOffset.Now, team);
+            Cache.Teams[teamId] = new KeyValuePair<DateTimeOffset, Team>(DateTimeOffset.Now, team);
 
             return team;
         }
@@ -68,8 +70,8 @@ namespace BlaseballStlats.DataControllers
             playersDict ??= new Dictionary<Guid, Player>();
 
             // Check cache and dictionary.
-            foreach (var id in playerIds.Where(id => Cache.PlayerCache.ContainsKey(id) && Cache.PlayerCache[id].Key > DateTimeOffset.Now.AddMinutes(-2)))
-                playersDict[id] = Cache.PlayerCache[id].Value;
+            foreach (var id in playerIds.Where(id => Cache.Players.ContainsKey(id) && Cache.Players[id].Key > DateTimeOffset.Now.AddMinutes(-2)))
+                playersDict[id] = Cache.Players[id].Value;
 
             var playerIdsToQuery = playerIds.Where(playerId => !playersDict.ContainsKey(playerId)).ToList();
 
@@ -82,11 +84,43 @@ namespace BlaseballStlats.DataControllers
                 {
                     playersDict.Add(p.Id, p);
                     p.LastUpdate = DateTimeOffset.Now;
-                    Cache.PlayerCache[p.Id] = new KeyValuePair<DateTimeOffset, Player>(DateTimeOffset.Now, p);
+                    Cache.Players[p.Id] = new KeyValuePair<DateTimeOffset, Player>(DateTimeOffset.Now, p);
                 }
             }
 
             return playerIds.Select(id => playersDict[id]).ToList();
+        }
+
+        public async Task<TeamElectionStats> GetTeamElectionStats(Guid teamId, string dumpFileName = null)
+        {
+            // Check cache.
+            if (Cache.TeamElectionStats.ContainsKey(teamId) && Cache.TeamElectionStats[teamId].Key > DateTimeOffset.Now.AddMinutes(-2))
+                return Cache.TeamElectionStats[teamId].Value;
+
+            // Call the API.
+            var endpoint = new Uri($"{Endpoint}/teamElectionStats?id={teamId}");
+            var teamElectionStats = await ApiGet<TeamElectionStats>(endpoint, dumpFileName);
+
+            // Update the cache.
+            Cache.TeamElectionStats[teamId] = new KeyValuePair<DateTimeOffset, TeamElectionStats>(DateTimeOffset.Now, teamElectionStats);
+
+            return teamElectionStats;
+        }
+
+        public async Task<RenovationProgress> GetRenovationProgress(Guid stadiumId, string dumpFileName = null)
+        {
+            // Check cache.
+            if (Cache.RenovationProgress.ContainsKey(stadiumId) && Cache.RenovationProgress[stadiumId].Key > DateTimeOffset.Now.AddMinutes(-2))
+                return Cache.RenovationProgress[stadiumId].Value;
+
+            // Call the API.
+            var endpoint = new Uri($"{Endpoint}/renovationProgress?id={stadiumId}");
+            var renovationProgress = await ApiGet<RenovationProgress>(endpoint, dumpFileName);
+
+            // Update the cache.
+            Cache.RenovationProgress[stadiumId] = new KeyValuePair<DateTimeOffset, RenovationProgress>(DateTimeOffset.Now, renovationProgress);
+
+            return renovationProgress;
         }
     }
 }

@@ -17,26 +17,14 @@ namespace BlaseballStlats.Models
         [JsonProperty("lineup")]
         public List<Guid> LineupIds { get; set; }
 
-        [JsonIgnore]
-        public List<Player> Lineup { get; set; }
-
         [JsonProperty("rotation")]
         public List<Guid> RotationIds { get; set; }
-
-        [JsonIgnore]
-        public List<Player> Rotation { get; set; }
 
         [JsonProperty("bullpen")]
         public List<Guid> BullpenIds { get; set; }
 
-        [JsonIgnore]
-        public List<Player> Bullpen { get; set; }
-
         [JsonProperty("bench")]
         public List<Guid> BenchIds { get; set; }
-
-        [JsonIgnore]
-        public List<Player> Bench { get; set; }
 
         [JsonProperty("seasAttr")]
         public List<string> SeasAttr { get; set; }
@@ -125,7 +113,23 @@ namespace BlaseballStlats.Models
         [JsonProperty("level")]
         public int? Level { get; set; }
 
+        [JsonIgnore]
+        public List<Player> Lineup { get; set; }
+
+        [JsonIgnore]
+        public List<Player> Rotation { get; set; }
+
+        [JsonIgnore]
+        public List<Player> Bench { get; set; }
+
+        [JsonIgnore]
+        public List<Player> Bullpen { get; set; }
+
+        [JsonIgnore]
         public IEnumerable<Player> Players => Lineup.Concat(Rotation).Concat(Bench).Concat(Bullpen);
+
+        [JsonIgnore]
+        public TeamElectionStats TeamElectionStats { get; set; }
     }
 
     public class TeamState

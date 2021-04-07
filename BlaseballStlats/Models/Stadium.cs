@@ -94,6 +94,9 @@ namespace BlaseballStlats.Models
 
         [JsonProperty("secondaryColor")]
         public string SecondaryColor { get; set; }
+
+        [JsonIgnore]
+        public RenovationProgress RenovationProgress { get; set; }
     }
 
     public class StadiumState

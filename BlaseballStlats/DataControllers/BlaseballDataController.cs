@@ -20,9 +20,8 @@ namespace BlaseballStlats.DataControllers
             var stadiumDict = stadiums.ToDictionary(s => s.Id);
             foreach (var team in teams)
             {
-                if (team.StadiumId.HasValue && stadiumDict.ContainsKey(team.StadiumId.Value))
-                    team.Stadium = stadiumDict[team.StadiumId.Value];
                 await GetPlayersInTeam(team, playersDict);
+                await GetStatsAndStadium(team, stadiumDict);
             }
 
             return teams;
@@ -44,6 +43,18 @@ namespace BlaseballStlats.DataControllers
                 else if (player.TournamentTeamId.GetValueOrDefault() == team.Id)
                     player.TournamentTeam = team;
             }
+        }
+
+        protected async Task GetStatsAndStadium(Team team, Dictionary<Guid, Stadium> stadiumDict)
+        {
+            // Add Stadium to Team Object
+            if (team.StadiumId.HasValue && stadiumDict.ContainsKey(team.StadiumId.Value))
+                team.Stadium = stadiumDict[team.StadiumId.Value];
+
+            // Get TeamElectionStats for the team and RenovationProgress for the stadium.
+            team.TeamElectionStats = await BlaseballApi.GetTeamElectionStats(team.Id);
+            if (team.Stadium != null)
+                team.Stadium.RenovationProgress = await BlaseballApi.GetRenovationProgress(team.Stadium.Id);
         }
     }
 }
