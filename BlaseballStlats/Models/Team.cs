@@ -6,10 +6,13 @@ using Newtonsoft.Json;
 
 namespace BlaseballStlats.Models
 {
-    public class Team
+    public class Team : IChroniclerApiData
     {
         [JsonProperty("id")]
         public Guid Id { get; set; }
+
+        [JsonProperty("lastUpdate")]
+        public DateTimeOffset LastUpdate { get; set; }
 
         [JsonProperty("lineup")]
         public List<Guid> LineupIds { get; set; }
@@ -102,7 +105,10 @@ namespace BlaseballStlats.Models
         public int TournamentWins { get; set; }
 
         [JsonProperty("stadium")]
-        public Guid? Stadium { get; set; }
+        public Guid? StadiumId { get; set; }
+
+        [JsonIgnore]
+        public Stadium Stadium { get; set; }
 
         [JsonProperty("eDensity")]
         public double EDensity { get; set; }

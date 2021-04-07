@@ -9,50 +9,84 @@ namespace BlaseballStlats.DataControllers
 {
     public class ApiControllerBlaseball : ApiControllerBase
     {
-
         public ApiControllerBlaseball() : base(new Uri("https://www.blaseball.com/database"))
         {
-            // Force TLS 1.2.
-            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls13 | SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
         }
+
+        protected class ApiCache
+        {
+            public DateTimeOffset AllTeamsCacheTime { get; set; }
+            public Dictionary<Guid, KeyValuePair<DateTimeOffset, Team>> TeamCache { get; set; } = new();
+            public Dictionary<Guid, KeyValuePair<DateTimeOffset, Player>> PlayerCache { get; set; } = new();
+        }
+        protected ApiCache Cache = new();
 
         public async Task<List<Team>> GetAllTeams(string dumpFileName = null)
         {
-            var endpoint = new Uri($"{Endpoint}/allTeams");
-            var result = await ApiGet<List<Team>>(endpoint, dumpFileName);
+            // Check cache.
+            if (Cache.AllTeamsCacheTime > DateTimeOffset.Now.AddMinutes(-2))
+                return Cache.TeamCache.Select(c => c.Value.Value).ToList();
 
-            return result;
+            // Call the API.
+            var endpoint = new Uri($"{Endpoint}/allTeams");
+            var teams = await ApiGet<List<Team>>(endpoint, dumpFileName);
+
+            // Set LastUpdate to current time.
+            foreach (var team in teams)
+                team.LastUpdate = DateTimeOffset.Now;
+
+            // Update the cache.
+            Cache.AllTeamsCacheTime = DateTimeOffset.Now;
+            foreach (var team in teams)
+                Cache.TeamCache[team.Id] = new KeyValuePair<DateTimeOffset, Team>(DateTimeOffset.Now, team);
+
+            return teams;
         }
 
         public async Task<Team> GetTeam(Guid teamId, string dumpFileName = null)
         {
-            var endpoint = new Uri($"{Endpoint}/team?id={teamId}");
-            var result = await ApiGet<Team>(endpoint, dumpFileName);
+            // Check cache.
+            if (Cache.TeamCache.ContainsKey(teamId) && Cache.TeamCache[teamId].Key > DateTimeOffset.Now.AddMinutes(-2))
+                return Cache.TeamCache[teamId].Value;
 
-            return result;
+            // Call the API.
+            var endpoint = new Uri($"{Endpoint}/team?id={teamId}");
+            var team = await ApiGet<Team>(endpoint, dumpFileName);
+
+            // Set LastUpdate to current time.
+            team.LastUpdate = DateTimeOffset.Now;
+
+            // Update the cache.
+            Cache.TeamCache[teamId] = new KeyValuePair<DateTimeOffset, Team>(DateTimeOffset.Now, team);
+
+            return team;
         }
 
         public async Task<List<Player>> GetPlayers(List<Guid> playerIds, Dictionary<Guid, Player> playersDict=null, string dumpFileName=null)
         {
             playersDict ??= new Dictionary<Guid, Player>();
-            var players = new List<Player>();
-            var playerIdsToQuery = new List<Guid>();
 
-            foreach (var playerId in playerIds)
+            // Check cache and dictionary.
+            foreach (var id in playerIds.Where(id => Cache.PlayerCache.ContainsKey(id) && Cache.PlayerCache[id].Key > DateTimeOffset.Now.AddMinutes(-2)))
+                playersDict[id] = Cache.PlayerCache[id].Value;
+
+            var playerIdsToQuery = playerIds.Where(playerId => !playersDict.ContainsKey(playerId)).ToList();
+
+            // Call the API and integrate the results into the cache and playersDict.
+            if (playerIdsToQuery.Any())
             {
-                if (playersDict.ContainsKey(playerId))
-                    players.Add(playersDict[playerId]);
-                else
-                    playerIdsToQuery.Add(playerId);
+                var endpoint = new Uri($"{Endpoint}/players?ids={string.Join(",", playerIdsToQuery)}");
+                var result = await ApiGet<List<Player>>(endpoint, dumpFileName);
+                foreach (var p in result)
+                {
+                    playersDict.Add(p.Id, p);
+                    p.LastUpdate = DateTimeOffset.Now;
+                    Cache.PlayerCache[p.Id] = new KeyValuePair<DateTimeOffset, Player>(DateTimeOffset.Now, p);
+                }
             }
 
-            var endpoint = new Uri($"{Endpoint}/players?ids={string.Join(",", playerIdsToQuery)}");
-            var result = await ApiGet<List<Player>>(endpoint, dumpFileName);
-            players.AddRange(result);
-            foreach (var p in result)
-                playersDict.Add(p.Id, p);
-
-            return players;
+            return playerIds.Select(id => playersDict[id]).ToList();
         }
     }
 }

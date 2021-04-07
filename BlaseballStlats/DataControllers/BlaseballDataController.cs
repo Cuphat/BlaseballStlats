@@ -9,14 +9,21 @@ namespace BlaseballStlats.DataControllers
     public class BlaseballDataController
     {
         protected readonly ApiControllerBlaseball BlaseballApi = new();
+        protected readonly ApiControllerChronicler ChroniclerApi = new();
 
         public async Task<List<Team>> GetAllTeams(Dictionary<Guid, Player> playersDict = null)
         {
             playersDict ??= new Dictionary<Guid, Player>();
 
             var teams = await BlaseballApi.GetAllTeams();
+            var stadiums = await ChroniclerApi.GetAllStadiums();
+            var stadiumDict = stadiums.ToDictionary(s => s.Id);
             foreach (var team in teams)
+            {
+                if (team.StadiumId.HasValue && stadiumDict.ContainsKey(team.StadiumId.Value))
+                    team.Stadium = stadiumDict[team.StadiumId.Value];
                 await GetPlayersInTeam(team, playersDict);
+            }
 
             return teams;
         }
