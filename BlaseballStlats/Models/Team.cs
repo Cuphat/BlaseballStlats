@@ -126,7 +126,7 @@ namespace BlaseballStlats.Models
         public List<Player> Bullpen { get; set; }
 
         [JsonIgnore]
-        public IEnumerable<Player> Players => Lineup.Concat(Rotation).Concat(Bench).Concat(Bullpen);
+        public IEnumerable<Player> Players => Lineup?.Concat(Rotation).Concat(Bench).Concat(Bullpen);
 
         [JsonIgnore]
         public TeamElectionStats TeamElectionStats { get; set; }
