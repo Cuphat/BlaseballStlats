@@ -6,13 +6,16 @@ using Newtonsoft.Json;
 
 namespace BlaseballStlats.Models
 {
-    public class Team : IChroniclerApiData
+    public class Team : IBlaseballData
     {
         [JsonProperty("id")]
         public Guid Id { get; set; }
 
-        [JsonProperty("lastUpdate")]
-        public DateTimeOffset LastUpdate { get; set; }
+        [JsonProperty("validFrom")]
+        public DateTimeOffset ValidFrom { get; set; }
+
+        [JsonProperty("validTo")]
+        public DateTimeOffset? ValidTo { get; set; }
 
         [JsonProperty("lineup")]
         public List<Guid> LineupIds { get; set; }
@@ -126,10 +129,34 @@ namespace BlaseballStlats.Models
         public List<Player> Bullpen { get; set; }
 
         [JsonIgnore]
+        public TeamElectionStats TeamElectionStats { get; set; }
+
+        [JsonIgnore]
         public IEnumerable<Player> Players => Lineup?.Concat(Rotation).Concat(Bench).Concat(Bullpen);
 
         [JsonIgnore]
-        public TeamElectionStats TeamElectionStats { get; set; }
+        public IEnumerable<Player> ActivePlayers => Lineup?.Concat(Rotation);
+
+        [JsonIgnore]
+        public double ActiveCombinedStars {
+            get
+            {
+                if (ActivePlayers is null || !ActivePlayers.Any())
+                    return 0.0;
+                return ActivePlayers.Sum(player => player.CombinedStars);
+            }
+        }
+
+        [JsonIgnore]
+        public double AverageActiveCombinedStars
+        {
+            get
+            {
+                if (ActivePlayers is null || !ActivePlayers.Any())
+                    return 0.0;
+                return ActiveCombinedStars / ActivePlayers.Count();
+            }
+        }
     }
 
     public class TeamState

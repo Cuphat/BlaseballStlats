@@ -16,12 +16,14 @@ namespace BlaseballStlats
         {
             /*/
             var controller = new BlaseballDataController();
-            //var teams = controller.GetAllTeams().GetAwaiter().GetResult();
+            var teams = controller.GetAllTeams().GetAwaiter().GetResult();
             var garages = controller.GetTeam(Guid.Parse("105bc3ff-1320-4e37-8ef0-8d595cb95dd0")).GetAwaiter().GetResult();
             var lovers = controller.GetTeam("Lovers").GetAwaiter().GetResult();
             var georgians = controller.GetTeam("ATL").GetAwaiter().GetResult();
             var worms = controller.GetTeam("Ohio").GetAwaiter().GetResult();
             var mechanics = controller.GetTeam("Core Mechanics").GetAwaiter().GetResult();
+            var teamsSortedByCombinedStars = teams.ToList();
+            teamsSortedByCombinedStars.Sort((x, y) => x.AverageActiveCombinedStars.CompareTo(y.AverageActiveCombinedStars));
             return;
             /*/
 

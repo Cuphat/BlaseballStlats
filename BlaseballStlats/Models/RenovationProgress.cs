@@ -6,21 +6,30 @@ using Newtonsoft.Json;
 
 namespace BlaseballStlats.Models
 {
-    public class RenovationProgress
+    public class RenovationProgress : IBlaseballData
     {
+        [JsonProperty("id")]
+        public Guid Id { get; set; }
+
+        [JsonProperty("validFrom")]
+        public DateTimeOffset ValidFrom { get; set; }
+
+        [JsonProperty("validTo")]
+        public DateTimeOffset? ValidTo { get; set; }
+
         [JsonProperty("progress")]
-        public Progress Progress { get; set; }
+        public RenovationsCompleted Progress { get; set; }
 
         [JsonProperty("stats")]
         public List<ElectionItem> Stats { get; set; }
-    }
 
-    public class Progress
-    {
-        [JsonProperty("total")]
-        public int Total { get; set; }
+        public class RenovationsCompleted
+        {
+            [JsonProperty("total")]
+            public int Total { get; set; }
 
-        [JsonProperty("toNext")]
-        public double ToNext { get; set; }
+            [JsonProperty("toNext")]
+            public double ToNext { get; set; }
+        }
     }
 }

@@ -6,13 +6,16 @@ using Newtonsoft.Json;
 
 namespace BlaseballStlats.Models
 {
-    public class Stadium : IChroniclerApiData
+    public class Stadium : IBlaseballData
     {
         [JsonProperty("id")]
         public Guid Id { get; set; }
 
-        [JsonProperty("lastUpdate")]
-        public DateTimeOffset LastUpdate { get; set; }
+        [JsonProperty("validFrom")]
+        public DateTimeOffset ValidFrom { get; set; }
+
+        [JsonProperty("validTo")]
+        public DateTimeOffset? ValidTo { get; set; }
 
         [JsonProperty("hype")]
         public int Hype { get; set; }

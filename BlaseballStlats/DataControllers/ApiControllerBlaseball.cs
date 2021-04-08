@@ -34,9 +34,9 @@ namespace BlaseballStlats.DataControllers
             var endpoint = new Uri($"{Endpoint}/allTeams");
             var teams = await ApiGet<List<Team>>(endpoint, dumpFileName);
 
-            // Set LastUpdate to current time.
+            // Set ValidFrom to current time.
             foreach (var team in teams)
-                team.LastUpdate = DateTimeOffset.Now;
+                team.ValidFrom = DateTimeOffset.Now;
 
             // Update the cache.
             Cache.AllTeamsTime = DateTimeOffset.Now;
@@ -56,8 +56,8 @@ namespace BlaseballStlats.DataControllers
             var endpoint = new Uri($"{Endpoint}/team?id={teamId}");
             var team = await ApiGet<Team>(endpoint, dumpFileName);
 
-            // Set LastUpdate to current time.
-            team.LastUpdate = DateTimeOffset.Now;
+            // Set ValidFrom to current time.
+            team.ValidFrom = DateTimeOffset.Now;
 
             // Update the cache.
             Cache.Teams[teamId] = new KeyValuePair<DateTimeOffset, Team>(DateTimeOffset.Now, team);
@@ -83,7 +83,7 @@ namespace BlaseballStlats.DataControllers
                 foreach (var p in result)
                 {
                     playersDict.Add(p.Id, p);
-                    p.LastUpdate = DateTimeOffset.Now;
+                    p.ValidFrom = DateTimeOffset.Now;
                     Cache.Players[p.Id] = new KeyValuePair<DateTimeOffset, Player>(DateTimeOffset.Now, p);
                 }
             }
@@ -101,6 +101,10 @@ namespace BlaseballStlats.DataControllers
             var endpoint = new Uri($"{Endpoint}/teamElectionStats?id={teamId}");
             var teamElectionStats = await ApiGet<TeamElectionStats>(endpoint, dumpFileName);
 
+            // Set Id and set ValidFrom to current time.
+            teamElectionStats.Id = teamId;
+            teamElectionStats.ValidFrom = DateTimeOffset.Now;
+
             // Update the cache.
             Cache.TeamElectionStats[teamId] = new KeyValuePair<DateTimeOffset, TeamElectionStats>(DateTimeOffset.Now, teamElectionStats);
 
@@ -116,6 +120,10 @@ namespace BlaseballStlats.DataControllers
             // Call the API.
             var endpoint = new Uri($"{Endpoint}/renovationProgress?id={stadiumId}");
             var renovationProgress = await ApiGet<RenovationProgress>(endpoint, dumpFileName);
+
+            // Set Id and set ValidFrom to current time.
+            renovationProgress.Id = stadiumId;
+            renovationProgress.ValidFrom = DateTimeOffset.Now;
 
             // Update the cache.
             Cache.RenovationProgress[stadiumId] = new KeyValuePair<DateTimeOffset, RenovationProgress>(DateTimeOffset.Now, renovationProgress);

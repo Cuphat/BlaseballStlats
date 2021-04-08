@@ -27,8 +27,8 @@ namespace BlaseballStlats.DataControllers
                 return Cache.Stadiums.Value.ToList();
 
             // Call the API.
-            var endpoint = new Uri($"{Endpoint}/v1/stadiums");
-            var result = await ApiGet<ChroniclerApiResponse<Stadium>>(endpoint, dumpFileName);
+            var endpoint = new Uri($"{Endpoint}/v2/entities?type=stadium");
+            var result = await ApiGet<ChroniclerApiResponseV2<Stadium>>(endpoint, dumpFileName);
             var stadiums = result.ExtractData();
 
             // Update the cache.

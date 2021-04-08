@@ -6,10 +6,10 @@ using Newtonsoft.Json;
 
 namespace BlaseballStlats.Models
 {
-    public class ChroniclerApiResponse<T> where T : class, IChroniclerApiData
+    public class ChroniclerApiResponseV1<T> where T : class, IBlaseballData
     {
         [JsonProperty("data")]
-        public List<ChroniclerApiData<T>> Data { get; set; }
+        public List<ChroniclerApiDataV1<T>> Data { get; set; }
 
         public List<T> ExtractData()
         {
@@ -17,7 +17,7 @@ namespace BlaseballStlats.Models
         }
     }
 
-    public class ChroniclerApiData<T> : IChroniclerApiData where T : class, IChroniclerApiData
+    public class ChroniclerApiDataV1<T> where T : class, IBlaseballData
     {
         [JsonProperty("id")]
         public Guid Id { get; set; }
@@ -30,14 +30,8 @@ namespace BlaseballStlats.Models
 
         public T ExtractData()
         {
-            Data.LastUpdate = LastUpdate;
+            Data.ValidFrom = LastUpdate;
             return Data;
         }
-    }
-
-    public interface IChroniclerApiData
-    {
-        Guid Id { get; set; }
-        DateTimeOffset LastUpdate { get; set; }
     }
 }

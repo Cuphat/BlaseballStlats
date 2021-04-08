@@ -72,6 +72,8 @@ namespace BlaseballStlats.DataControllers
                 Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(AuthorizationType, Authorization);
             else if (Authorization != null)
                 Client.DefaultRequestHeaders.Authorization = AuthenticationHeaderValue.Parse(Authorization);
+            else
+                Client.DefaultRequestHeaders.Authorization = null;
         }
 
         // Enum containing which request type we are sending.
