@@ -244,7 +244,8 @@ namespace BlaseballStlats.Models
                     scream += $"... (CONT. FOR {Soul - 300} SOUL)";
 
                 return scream;
-            } }
+            }
+        }
     }
 
     public class PlayerState

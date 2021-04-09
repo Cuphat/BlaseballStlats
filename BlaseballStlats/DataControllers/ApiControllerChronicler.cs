@@ -36,5 +36,14 @@ namespace BlaseballStlats.DataControllers
 
             return stadiums;
         }
+
+        public async Task<Player> GetPlayer(Guid playerId, DateTimeOffset time, string dumpFileName = null)
+        {
+            var endpoint = new Uri($"{Endpoint}/v2/entities?type=player&id={playerId}&at={time:s}Z");
+            var result = await ApiGet<ChroniclerApiResponseV2<Player>>(endpoint, dumpFileName);
+            var player = result.ExtractData().FirstOrDefault();
+
+            return player;
+        }
     }
 }
